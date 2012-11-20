@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="app_name">Layout</string>
+    <string name="ma">Ma</string>
+    <string name="di">di</string>
+    <string name="wo">wo</string>
+    <string name="don">Do</string>
+    <string name="vr">vr</string>
+
+</resources>

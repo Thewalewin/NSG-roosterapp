@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:layout_marginTop="5dip">
+    
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical" android:id="@+id/LinearLayout">
+
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Hier komt de agenda" />
+
+	    <TableLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" android:id="@+id/TableLayout" android:background="@drawable/tabelcel">
+
+	        <TableRow
+	            android:id="@+id/tableRow1"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" android:background="@drawable/tabelcel">
+
+	        </TableRow>
+	    </TableLayout>
+
+	</LinearLayout>
+</ScrollView>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:layout_marginTop="5dip">
+    
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical" android:id="@+id/roosterLayout">
+	
+	    <TextView
+	        android:id="@+id/gebruikerVeld"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="2dp"
+	        android:layout_marginTop="5dp"
+	        android:text="Dit is het rooster van Stephan" />
+	
+	    <TextView
+	        android:id="@+id/updatetijdVeld"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="2dp"
+	        android:layout_marginLeft="2dp"
+	        android:text="De laatste update was op 9-8-2012 om 19:25" />
+	
+	    <Button
+	        android:id="@+id/updateKnop"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="1dp"
+	        android:onClick="roosterUpdateKnop"
+	        android:text="Update Rooster" />
+	
+	    <TableLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" 
+	        android:id="@+id/roosterTabel" 
+	        android:collapseColumns="*" 
+	        android:shrinkColumns="1,2,3,4,5"
+			android:stretchColumns="1,2,3,4,5">
+	
+	        <TableRow
+	            android:id="@+id/kopRij"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+		
+	            <TextView
+	                android:id="@+id/uurKolom"
+	                android:layout_width="15dp"
+	                android:layout_height="wrap_content"
+	                android:background="@drawable/tabelhoek_links_boven" android:layout_marginRight="-1dp"/>
+	
+	            <TextView
+	                android:id="@+id/maandagKolom"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Ma" android:background="@drawable/tabelcel" android:layout_marginRight="-1dp" android:paddingLeft="3dp"/>
+	
+	            <TextView
+	                android:id="@+id/dinsdagKolom"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Di" android:background="@drawable/tabelcel" android:layout_marginRight="-1dp" android:paddingLeft="3dp"/>
+	
+	            <TextView
+	                android:id="@+id/woensdagKolom"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Wo" android:background="@drawable/tabelcel" android:paddingLeft="3dp" android:layout_marginRight="-1dp"/>
+	
+	            <TextView
+	                android:id="@+id/donderdagKolom"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Do" android:background="@drawable/tabelcel" android:paddingLeft="3dp" android:layout_marginRight="-1dp"/>
+	
+	            <TextView
+	                android:id="@+id/vrijdagKolom"
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:text="Vr" android:background="@drawable/tabelhoek_rechts_boven" android:paddingLeft="3dp"/>
+	
+	        </TableRow>
+	    </TableLayout>
+	
+	</LinearLayout>
+</ScrollView>
