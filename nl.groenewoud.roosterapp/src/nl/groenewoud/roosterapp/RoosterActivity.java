@@ -43,8 +43,19 @@ public class RoosterActivity extends Activity {
 	
 		
 	// Variabelen aanmaken
-	private String[][] rooster = new String[5][9];
-	private ArrayList<String> proefwerkrooster = new ArrayList<String>(0);
+	
+	public class lesuur {
+		int n;
+		String lesinformatie;
+		
+		public lesuur(int dag, String les) {
+			// TODO Auto-generated constructor stub
+			n = dag;
+			lesinformatie = les;
+		}
+	}
+
+	private ArrayList<lesuur> rooster = new ArrayList<lesuur>(0);
 	
 	private Button updateKnop;
 	private TextView gebruikerVeld;
@@ -87,13 +98,6 @@ public class RoosterActivity extends Activity {
         vrijdagCel = new TextView[9];
         
         tabelLayout();
-        
-        //Array voor Rooster maken
-        for(int dag=0; dag<5; dag++){
-        	for(int uur=0; uur<9; uur++){
-        		rooster[dag][uur] = new String();
-        	}
-        }
         
         roosterUpdate();
         
@@ -293,7 +297,7 @@ public class RoosterActivity extends Activity {
 						les = tabelCode.substring(lesPositie + 19, tabelCode.indexOf("</span>"));
 						les = les.replaceAll("<br />", "\n");
 						
-						rooster[dag][uur] = les;
+						rooster.add(new lesuur(dag, les));
 						tabelCode = tabelCode.substring(tabelCode.indexOf("</table> </td>") + 14);
 						
 					}
@@ -301,7 +305,7 @@ public class RoosterActivity extends Activity {
 					else if ((vrijPositie < lesPositie || lesPositie == -1) && (vrijPositie < uitvalPositie || uitvalPositie == -1) && vrijPositie != -1){
 						
 						// Het eerst voorkomende item is een tussenuur
-						rooster[dag][uur] = "vrij";
+						rooster.add(new lesuur(dag, "vrij")); 
 						tabelCode = tabelCode.substring(tabelCode.indexOf("</td>") + 5);
 					
 					}
@@ -309,7 +313,7 @@ public class RoosterActivity extends Activity {
 					else {
 						
 						// Het volgende uur valt uit
-						rooster[dag][uur] = "uitval";
+						rooster.add(new lesuur(dag, "uitval"));
 						tabelCode = tabelCode.substring(tabelCode.indexOf("</td>") + 5);
 						
 					}
