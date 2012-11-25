@@ -97,7 +97,7 @@ public class RoosterActivity extends Activity {
         donderdagCel = new TextView[9];
         vrijdagCel = new TextView[9];
         
-        tabelLayout();
+        tabelLayout(true);
         
         roosterUpdate();
         
@@ -168,73 +168,78 @@ public class RoosterActivity extends Activity {
 		return (networkInfo != null && networkInfo.isConnected());
 	}
 	
-	private void tabelLayout(){
-		
-		// Geef de cellen eigenschappen en voeg ze toe aan de tabel
-        for(int i=0; i<9; i++){
-           
-        	Resources r = getResources();
-        	TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-        	
-        	int marginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -1, r.getDisplayMetrics());
-        	int paddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());
-            layoutParams.setMargins(0, marginPx, marginPx, 0); // left, top, right, bottom
-            
-        	rij[i] = new TableRow(this);
-        	        	
-        	uurCel[i] = new TextView(this);
-        	uurCel[i].setText(String.valueOf(i));
-           	uurCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-           	uurCel[i].setPadding(paddingPx, 0, 0, 0);
-        	uurCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	if(i==8){
-        		uurCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelhoek_links_onder));
-        	}
-        	rij[i].addView(uurCel[i], layoutParams);
-        	
-        	maandagCel[i] = new TextView(this);
-        	maandagCel[i].setText("Ma");
-        	maandagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-        	maandagCel[i].setPadding(paddingPx, 0, 0, 0);
-        	maandagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	rij[i].addView(maandagCel[i], layoutParams);
-        	
-        	dinsdagCel[i] = new TextView(this);
-
-        	dinsdagCel[i].setText("Di");
-        	dinsdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-        	
-        	dinsdagCel[i].setPadding(paddingPx, 0, 0, 0);
-        	dinsdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	rij[i].addView(dinsdagCel[i], layoutParams);
-        	
-        	woensdagCel[i] = new TextView(this);
-        	woensdagCel[i].setText("Wo");
-        	woensdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-        	woensdagCel[i].setPadding(paddingPx, 0, 0, 0);
-        	woensdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	rij[i].addView(woensdagCel[i], layoutParams);
-        	        	
-        	donderdagCel[i] = new TextView(this);
-        	donderdagCel[i].setText("Do");
-        	donderdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-        	donderdagCel[i].setPadding(paddingPx, 0, 0, 0);
-        	donderdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	rij[i].addView(donderdagCel[i], layoutParams);
-        	
-        	vrijdagCel[i] = new TextView(this);
-        	vrijdagCel[i].setText("Vrij");
-        	vrijdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
-        	vrijdagCel[i].setPadding(paddingPx, 0, 0, 0);
-        	vrijdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
-        	if(i==8){
-        		vrijdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelhoek_rechts_onder));
-        	}
-        	rij[i].addView(vrijdagCel[i], layoutParams);
-        	
-        	roosterTabel.addView(rij[i]);
-        }
-		
+	private void tabelLayout( boolean normaleweek){
+		if(normaleweek){
+			// Geef de cellen eigenschappen en voeg ze toe aan de tabel
+	        for(int i=0; i<9; i++){
+	           
+	        	Resources r = getResources();
+	        	TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+	        	
+	        	int marginPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, -1, r.getDisplayMetrics());
+	        	int paddingPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, r.getDisplayMetrics());
+	            layoutParams.setMargins(0, marginPx, marginPx, 0); // left, top, right, bottom
+	            
+	        	rij[i] = new TableRow(this);
+	        	        	
+	        	uurCel[i] = new TextView(this);
+	        	uurCel[i].setText(String.valueOf(i));
+	           	uurCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	           	uurCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	uurCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	if(i==8){
+	        		uurCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelhoek_links_onder));
+	        	}
+	        	
+	        	rij[i].addView(uurCel[i], layoutParams);
+	        	        	
+	        	maandagCel[i] = new TextView(this);
+	        	maandagCel[i].setText("Ma");
+	        	maandagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	        	maandagCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	maandagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	rij[i].addView(maandagCel[i], layoutParams);
+	        	
+	        	dinsdagCel[i] = new TextView(this);
+	
+	        	dinsdagCel[i].setText("Di");
+	        	dinsdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	        	
+	        	dinsdagCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	dinsdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	rij[i].addView(dinsdagCel[i], layoutParams);
+	        	
+	        	woensdagCel[i] = new TextView(this);
+	        	woensdagCel[i].setText("Wo");
+	        	woensdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	        	woensdagCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	woensdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	rij[i].addView(woensdagCel[i], layoutParams);
+	        	        	
+	        	donderdagCel[i] = new TextView(this);
+	        	donderdagCel[i].setText("Do");
+	        	donderdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	        	donderdagCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	donderdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	rij[i].addView(donderdagCel[i], layoutParams);
+	        	
+	        	vrijdagCel[i] = new TextView(this);
+	        	vrijdagCel[i].setText("Vrij");
+	        	vrijdagCel[i].setHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, r.getDisplayMetrics()));
+	        	vrijdagCel[i].setPadding(paddingPx, 0, 0, 0);
+	        	vrijdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelcel));
+	        	/*if(i==8){
+	        		vrijdagCel[i].setBackgroundDrawable(getResources().getDrawable(R.drawable.tabelhoek_rechts_onder));
+	        	}*/
+	        	
+	        	rij[i].addView(vrijdagCel[i], layoutParams);
+	        	
+	        	roosterTabel.addView(rij[i]);
+	        }
+		}
+		else {
+			//Tabellayout voor uurgebonden roostern
+		}
 	}
 	
 	
@@ -323,11 +328,11 @@ public class RoosterActivity extends Activity {
 			}
 			
 			for (int i=0; i<9; i++){
-				maandagCel[i].setText(rooster[0][i]);
-				dinsdagCel[i].setText(rooster[1][i]);
-				woensdagCel[i].setText(rooster[2][i]);
-				donderdagCel[i].setText(rooster[3][i]);
-				vrijdagCel[i].setText(rooster[4][i]);
+				maandagCel[i].setText(rooster.get(0 + i*5).lesinformatie);
+				dinsdagCel[i].setText(rooster.get(1 + i*5).lesinformatie);
+				woensdagCel[i].setText(rooster.get(2 + i*5).lesinformatie);
+				donderdagCel[i].setText(rooster.get(3 + i*5).lesinformatie);
+				vrijdagCel[i].setText(rooster.get(4 + i*5).lesinformatie);
 			}
 			
 		}
@@ -355,8 +360,7 @@ public class RoosterActivity extends Activity {
 						String toets = tabelCode.substring(toetsPositie + 19, toetseindePositie);
 						toets = toets.replaceAll("<br />", "\n");
 						
-						toets = i + toets;
-						proefwerkrooster.add(toets);
+						rooster.add(new lesuur(i, toets));
 						tabelCode = tabelCode.substring(toetseindePositie + 6);
 					}
 					
@@ -368,8 +372,7 @@ public class RoosterActivity extends Activity {
 						String les = tabelCode.substring(lesPositie + 19, leseindePositie);
 						les = les.replaceAll("<br />", "\n");
 						
-						les = i + les;
-						proefwerkrooster.add(les);
+						rooster.add(new lesuur(i, les));
 						tabelCode = tabelCode.substring(leseindePositie + 6);
 					}
 					
