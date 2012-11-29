@@ -16,12 +16,14 @@ import android.widget.Toast;
 
 
 public class VoorkeurActivity extends Activity {
-	EditText leerlingnummerVeld;
-	EditText wachtwoordVeld;
-	Button opslaanKnop;
+	private EditText leerlingnummerVeld;
+	private EditText wachtwoordVeld;
+	private Button opslaanKnop;
 	
-	String leerlingnummer;
-	String wachtwoord;
+	private String leerlingnummer;
+	private String wachtwoord;
+	
+	private RoosterActivity roosteractivity = new RoosterActivity();
 	
     public void onCreate(Bundle savedInstanceState) {
     	//laat de layout uit de xml file zien
@@ -31,6 +33,7 @@ public class VoorkeurActivity extends Activity {
         wachtwoordVeld = (EditText) findViewById(R.id.wachtwoordVeld);
         opslaanKnop = (Button) findViewById(R.id.opslaanKnop);
     }
+    
     //de procedure voor de opslaanknop
     public void opslaan(View view){
     	if (view == opslaanKnop){
@@ -50,6 +53,7 @@ public class VoorkeurActivity extends Activity {
 		        editor.putString("wachtwoord", wachtwoord);
 		        
 		        editor.commit();
+		        
 		        //laat een berichtje weergeven dat alles opgeslagen is en sluit het voorkeurscherm af
 	    		Toast.makeText(this, "opgeslagen", Toast.LENGTH_LONG).show();
 	    		this.finish();
