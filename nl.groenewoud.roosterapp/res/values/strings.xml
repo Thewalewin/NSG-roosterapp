@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">Layout</string>
-    <string name="ma">Ma</string>
-    <string name="di">di</string>
-    <string name="wo">wo</string>
-    <string name="don">Do</string>
-    <string name="vr">vr</string>
+    <string name="app_name">NSG Rooster</string>
+    <string name="maandag">Ma</string>
+    <string name="dinsdag">Di</string>
+    <string name="woensdag">Wo</string>
+    <string name="donderdag">Do</string>
+    <string name="vrijdag">Vr</string>
+    <string name="eigenaar">Dit is het rooster van</string>
+    <string name="updatetijd">Geüpdate op</string>
+    <string name="update">Update rooster</string>
+    <string name="favoriet">Favoriet :</string>
+    <string name="docent">Docent</string>
+    <string name="leerling">Leerling</string>
+    <string name="klas">Klas</string>
+    <string name="zoeken">Zoeken naar rooster van:</string>
+    <string name="voorkeuren">Voorkeuren</string>
+    <string name="leerlingnummer">Leerlingnummer:</string>
+    <string name="wachtwoord">Wachtwoord:</string>
+    <string name="opslaan">Opslaan</string>
+    <string name="week">Week:</string>
+    <string name="vorigeweek">Vorige week</string>
+    <string name="volgendeweek">Volgende week</string>
 
 </resources>

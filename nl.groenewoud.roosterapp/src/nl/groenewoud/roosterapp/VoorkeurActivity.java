@@ -23,9 +23,7 @@ public class VoorkeurActivity extends Activity {
 	private String leerlingnummer;
 	private String wachtwoord;
 	
-	private RoosterActivity roosteractivity = new RoosterActivity();
-	
-    public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
     	//laat de layout uit de xml file zien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.voorkeur);
@@ -49,13 +47,14 @@ public class VoorkeurActivity extends Activity {
 		        
 		        SharedPreferences.Editor editor = voorkeuren.edit();
 		        editor.putBoolean("eersteStart", false);
+		        editor.putBoolean("gewijzigd", true);
 		        editor.putString("leerlingnummer", leerlingnummer);
 		        editor.putString("wachtwoord", wachtwoord);
 		        
 		        editor.commit();
 		        
 		        //laat een berichtje weergeven dat alles opgeslagen is en sluit het voorkeurscherm af
-	    		Toast.makeText(this, "opgeslagen", Toast.LENGTH_LONG).show();
+	    		Toast.makeText(this, "Opgeslagen", Toast.LENGTH_LONG).show();
 	    		this.finish();
     		}
     		else{
@@ -63,5 +62,5 @@ public class VoorkeurActivity extends Activity {
     			Toast.makeText(this, "Vul gebruiker gegevens in", Toast.LENGTH_LONG).show();
     		}
     	}
-    }
+    }    
 }

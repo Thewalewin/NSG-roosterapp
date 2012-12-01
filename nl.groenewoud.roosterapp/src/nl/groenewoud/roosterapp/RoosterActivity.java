@@ -21,12 +21,11 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TableLayout;
-import android.widget.TableLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,8 +59,11 @@ public class RoosterActivity extends Activity {
 	private ArrayList<lesuur> rooster = new ArrayList<lesuur>(0);
 	
 	private Button updateKnop;
+	private ImageButton vorigeweekKnop;
+	private ImageButton volgendeweekKnop;
 	private TextView gebruikerVeld;
 	private TextView updatetijdVeld;
+	private TextView weekVeld;
 	
 	private String tabelCode = "";
 	private String errorRegel = "";
@@ -70,7 +72,7 @@ public class RoosterActivity extends Activity {
 	
 	private String leerlingnummer = "";
 	private String wachtwoord = "";
-	private String weeknummer;
+	private String weeknummer = "";
 	
 	private ProgressDialog progressDialog;
 	private ResponseReceiver receiver;
@@ -83,8 +85,11 @@ public class RoosterActivity extends Activity {
         
         roosterTabel = (TableLayout) findViewById(R.id.roosterTabel);
         updateKnop = (Button) findViewById(R.id.updateKnop);
+        vorigeweekKnop = (ImageButton) findViewById(R.id.vorigeweekKnop);
+        volgendeweekKnop = (ImageButton) findViewById(R.id.volgendeweekKnop);
         gebruikerVeld = (TextView) findViewById(R.id.gebruikerVeld);
         updatetijdVeld = (TextView) findViewById(R.id.updatetijdVeld);
+        weekVeld = (TextView) findViewById(R.id.weeknummerVeld);
         
         // Maak rijen een cellen voor de tabel 
         rij = new TableRow[9];
@@ -106,15 +111,15 @@ public class RoosterActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.menu, menu);
+	    super.onCreateOptionsMenu(menu);
+	    menu.add(0, R.id.updateMenuKnop, 0, "Update");
 	    return true;
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        case R.id.updateMenuknop:     roosterUpdate();
+	        case R.id.updateMenuKnop:     roosterUpdate();
 	                            break;
 	        case R.id.optiesMenuknop:     startActivity(new Intent(this, VoorkeurActivity.class));
 	                            break;
@@ -130,28 +135,23 @@ public class RoosterActivity extends Activity {
 			progressDialog.setMessage("Bezig met het ophalen van gegevens…");
 			progressDialog.show();
 			
-	        Calendar calendar = Calendar.getInstance();
-	        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+	        SharedPreferences voorkeuren = getSharedPreferences("Voorkeuren", Context.MODE_PRIVATE); 
+	        boolean gewijzigd = voorkeuren.getBoolean("gewijzigd", false);
 	        
-	        if((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && calendar.get(Calendar.HOUR_OF_DAY) >= 17) || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR) +1);
+	        if(gewijzigd){
+			    leerlingnummer = voorkeuren.getString("leerlingnummer", "");
+			    wachtwoord = voorkeuren.getString("wachtwoord", "");
+			    SharedPreferences.Editor editor = voorkeuren.edit();
+			    editor.putBoolean("gewijzigd", false);
+			    editor.commit();
 	        }
-	        
-	        else{
-	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
-	        }
-			
-	        if(leerlingnummer == "" || wachtwoord == "" ){
-		        SharedPreferences voorkeuren = getSharedPreferences("Voorkeuren", Context.MODE_PRIVATE);    	
-		        
-		        leerlingnummer = voorkeuren.getString("leerlingnummer", "");
-		        wachtwoord = voorkeuren.getString("wachtwoord", "");
-	        }
-	        
+
 			Intent downloadIntent = new Intent(this, DownloadService.class);
 			downloadIntent.putExtra("user", leerlingnummer);
 			downloadIntent.putExtra("paswoord", wachtwoord);
-			downloadIntent.putExtra("weeknummer", weeknummer);
+			downloadIntent.putExtra("gewijzigd", gewijzigd);
+			
+			
 			startService(downloadIntent);
 			
 			IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
@@ -162,13 +162,49 @@ public class RoosterActivity extends Activity {
 		
 		else{
 			// Laat een error zien: geen verbinding
-			Toast.makeText(RoosterActivity.this, "Je telefoon is niet verbonden met het internet.", Toast.LENGTH_LONG).show();
+			Toast.makeText(RoosterActivity.this, "Je telefoon is niet verbonden met het internet.", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
 	public void roosterUpdateKnop(View view){
 		if (view == updateKnop){
 			roosterUpdate();
+		}
+	}
+
+	public void vorigeweekKnop(View view){
+		if (view == vorigeweekKnop){
+			/*
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+	        
+	        if((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && calendar.get(Calendar.HOUR_OF_DAY) >= 17) || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR));
+	        }
+	        
+	        else{
+	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR) -1);
+	        }
+	        roosterUpdate();
+	        */
+		}
+	}
+	
+	public void volgendeweekKnop(View view){
+		if (view == volgendeweekKnop){
+			/*
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+	        
+	        if((calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && calendar.get(Calendar.HOUR_OF_DAY) >= 17) || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR) + 2);
+	        }
+	        
+	        else{
+	        	weeknummer = String.valueOf(calendar.get(Calendar.WEEK_OF_YEAR) +1);
+	        }
+	        roosterUpdate();
+	        */
 		}
 	}
 	
@@ -263,6 +299,7 @@ public class RoosterActivity extends Activity {
 			errorRegel = intent.getStringExtra("errorRegel");
 			gebruikersnaam = intent.getStringExtra("gebruikersnaam");
 			updatetijd = intent.getStringExtra("updatetijd");
+			weeknummer = intent.getStringExtra("weeknummer");
 
 			
 			if(tabelCode.length() > 0){
@@ -278,10 +315,11 @@ public class RoosterActivity extends Activity {
 					sorteren(false);
 				}
 				gebruikerVeld.setText("Dit is het rooster van " + gebruikersnaam);
-				updatetijdVeld.setText("Ge-update op: " + updatetijd);
+				updatetijdVeld.setText(updatetijd);
+				weekVeld.setText("Week : " + weeknummer);
 			}
 			else {
-				Toast.makeText(RoosterActivity.this, errorRegel, Toast.LENGTH_LONG).show();
+				Toast.makeText(RoosterActivity.this, errorRegel, Toast.LENGTH_SHORT).show();
 			}
 			progressDialog.dismiss();
 		}

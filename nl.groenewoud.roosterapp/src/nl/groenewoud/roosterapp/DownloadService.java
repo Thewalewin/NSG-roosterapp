@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import nl.groenewoud.roosterapp.RoosterActivity.ResponseReceiver;
 
 import org.apache.http.HttpResponse;
@@ -50,7 +52,11 @@ public class DownloadService extends IntentService {
 	private String errorRegel;
 	private String gebruikersnaam;
 	private String updatetijd;
+	private String weeknummer;
 
+	private String user;
+	private String paswoord;
+	private boolean gewijzigd;
 	/*
 	 * Deze void wordt opgeroepen als de service gestart wordt. 
 	 * Dit gebeurt als de gebruiker het rooster wil updaten.
@@ -63,9 +69,9 @@ public class DownloadService extends IntentService {
 		 * het downloaden van het rooster. Zoals gebruikersnaam, wachtwoord, weeknummer etc. 
 		 */
 		
-		final String user = intent.getExtras().getString("user");
-		final String paswoord = intent.getExtras().getString("paswoord");
-		final String weeknummer = intent.getExtras().getString("weeknummer");
+		user = intent.getExtras().getString("user");
+		paswoord = intent.getExtras().getString("paswoord");
+		gewijzigd = intent.getExtras().getBoolean("gewijzigd");
 		
 		/*
 		 *  Omdat de service hergebruikt wordt bij een rooster update moeten de variabelen geleegd worden
@@ -75,6 +81,7 @@ public class DownloadService extends IntentService {
 		tabelCode = "";
 		errorRegel = "";
 		gebruikersnaam = "";
+		updatetijd = "";
 		
 		/*
 		 * Hier wordt geprobeerd het rooster te downloaden. Als er tijdens het downloaden een
@@ -83,7 +90,7 @@ public class DownloadService extends IntentService {
 		 */
 		
 		try{
-			downloadUrl("http://www.groenewoud.nl/infoweb/infoweb/index.php", user, paswoord, weeknummer);
+			downloadUrl("http://www.groenewoud.nl/infoweb/infoweb/index.php");
 			
 			/*
 			 * Nu het downloaden voltooid is willen we de tekst leesbaar maken.
@@ -98,8 +105,9 @@ public class DownloadService extends IntentService {
 				tabelCode = tabelCode.replaceAll("<div class=\"toets\"(.+?)>", "<div class=\"toets\">");
 				tabelCode = tabelCode.replaceAll("<div class=\"les\"(.+?)>", "<div class=\"les\">");
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
-				updatetijd = sdf.format(new Date());
+				SimpleDateFormat datum = new SimpleDateFormat("EEE, d MMM", new Locale("nl", "NL"));
+				SimpleDateFormat tijd = new SimpleDateFormat("HH:mm:ss", new Locale("nl", "NL"));
+				updatetijd = "Geüpdate op " + datum.format(new Date()) + " om " + tijd.format(new Date());
 			}
 			
 		} catch (ClientProtocolException e){
@@ -122,6 +130,7 @@ public class DownloadService extends IntentService {
 		broadcastIntent.putExtra("errorRegel", errorRegel);
 		broadcastIntent.putExtra("gebruikersnaam", gebruikersnaam);
 		broadcastIntent.putExtra("updatetijd", updatetijd);
+		broadcastIntent.putExtra("weeknummer", weeknummer);
 		sendBroadcast(broadcastIntent);
 		
 	}
@@ -149,7 +158,7 @@ public class DownloadService extends IntentService {
      * te worden naar handelbare code
      */
     
-	private String downloadUrl(String infoweblink, String user, String paswoord, String weeknummer) throws IOException, ClientProtocolException, Exception {
+	private String downloadUrl(String infoweblink) throws IOException, ClientProtocolException, Exception {
 		
 		int statuscode;
 		String broncode;
@@ -165,58 +174,26 @@ public class DownloadService extends IntentService {
 		PersistentCookieStore cookieStore = new PersistentCookieStore(getBaseContext());
 		httpclient = createHttpClient();
 		httpclient.setCookieStore(cookieStore);
+		cookieStore.clearExpired(new Date());
 		HttpGet request = new HttpGet(infoweblink);
 		response = httpclient.execute(request); // Hier wordt de verbinding uitgevoerd en het antwoord opgeslagen in de response variabele 
 		statuscode = response.getStatusLine().getStatusCode(); // Hier wordt de http statuscode opgeslagen
 
-		//Als de download succesvol was dan willen we inloggen of na gaan of er wel een rooster online staat
-		
-		if (statuscode == 200){
-			
-			/*
-			 * De aanvraag is gelukt, nu moeten we kijken of er al ingelogd was op infoweb,
-			 * of dat we nog in moeten loggen.
-			 */
+		if(statuscode == 200){
+			//Als de download succesvol was dan willen we inloggen, de week veranderen, na gaan of er wel een rooster online staat of het rooster weergeven
 			broncode = EntityUtils.toString(response.getEntity());
 			
-			int weekPositie = broncode.indexOf("selected=\"selected\">");
-			String gevondenWeek = broncode.substring(weekPositie + 20, weekPositie + 22);
-			if (broncode.indexOf("<h1>Mijn rooster</h1>") >= 0 && Integer.parseInt(gevondenWeek) == Integer.parseInt(weeknummer)){
+			if(broncode.indexOf("<h1>Mijn rooster</h1>") == -1 || gewijzigd){
+				//We willen inloggen of de week veranderen
+				int csrfPositie = broncode.indexOf("name=\"csrf\" value=\"");
 				
-				//We hoeven niet meer in te loggen op infoweb
-				int tabelPositie = broncode.indexOf("<table class=\"roosterdeel\"");
-				
-				if (tabelPositie >= 0){
-					
-					// Er staat een rooster op infoweb, haal het rooster uit de broncode en stuur deze terug voor analyse
-					int tabelEinde = broncode.indexOf("<td id=\"linkerfooter\">");
-					tabelCode = broncode.substring(tabelPositie, tabelEinde);
-					
-					int gebruikersnaamPositie = broncode.indexOf("<h2>Het rooster voor ");
-					
-					gebruikersnaam = broncode.substring(gebruikersnaamPositie + 21, broncode.indexOf("</h2>", gebruikersnaamPositie));
-					return tabelCode;
-				}
-				
-				else{
-					
-					//We zijn ingelogd maar er staat geen rooster voor deze week online
-					errorRegel = "Er staat geen rooster op infoweb!";
+				if(csrfPositie == -1){
+					errorRegel = "Ik kan de beveiliging van infoweb niet omzeilen.";
 					return errorRegel;
-					
 				}
 				
-			}
-			
-			else {
-				
-				//We zijn niet ingelogd op infoweb, laten we dit snel doen!
-				HttpPost post = new HttpPost(infoweblink);
-				int csrfPositie = broncode.indexOf("name=\"csrf\" value=\""); //csrf is een random code die ter beveiliging bij het inloggen wordt mee gegeven
-				
-				if (csrfPositie != -1){
-					
-					//De code was vindbaar en dus kunnen we inloggen op infoweb
+				else {
+					//We hebben de verificatie code laten we inloggen
 					String csrfCode = broncode.substring(csrfPositie + 19, csrfPositie + 51);
 					
 					//De onderstaande lijst is de informatie die meegstuurd wordt om in te loggen op infoweb
@@ -225,106 +202,99 @@ public class DownloadService extends IntentService {
 					  postData.add(new BasicNameValuePair("paswoord", paswoord));
 					  postData.add(new BasicNameValuePair("login", "loginform"));
 					  postData.add(new BasicNameValuePair("csrf", csrfCode));
-					  postData.add(new BasicNameValuePair("weeknummer", weeknummer));
-					  
+					  					  
 					//Hier wordt er ingelogd en wordt de broncode en statuscode ingeladen.
+					HttpPost post = new HttpPost(infoweblink);
 					post.setEntity(new UrlEncodedFormEntity(postData));
 					response = httpclient.execute(post);
 					statuscode = response.getStatusLine().getStatusCode();
 					
-					if (statuscode == 200){
-						
-						//De aanvraag is gelukt nu moet het rooster eruit knippen en terug sturen
+					if(statuscode == 200){
 						broncode = EntityUtils.toString(response.getEntity());
-						int tabelPositie = broncode.indexOf("<table class=\"roosterdeel\">");
-						
-						if (tabelPositie >= 0){
-							
-							// Er staat een rooster op infoweb, haal het rooster uit de broncode en stuur deze terug voor analyse
-							int tabelEinde = broncode.indexOf("<td id=\"linkerfooter\">");
-							tabelCode = broncode.substring(tabelPositie, tabelEinde);
-							
-							int gebruikersnaamPositie = broncode.indexOf("<h2>Het rooster voor ");
-							
-							gebruikersnaam = broncode.substring(gebruikersnaamPositie + 21, broncode.indexOf("</h2>", gebruikersnaamPositie));
-							
-							return tabelCode;
-						}
-						
-						else{
-							
-							//We zijn ingelogd maar er staat geen rooster voor deze week online
-							errorRegel = "Er staat geen rooster op infoweb!";
-							return errorRegel;
-							
-						}
-						
 					}
 					
-					//Als er iets misging dan willen we netjes aan de gebruiker laten weten wat er fout ging
-					
 					else if(statuscode == 404){
-						
 						// De pagina is niet gevonden
 						errorRegel = "404 Pagina niet gevonden, Infoweb kon niet gevonden.";			
 						return errorRegel;
-						
+					}
+					
+					else if(statuscode == 500){
+						//Verkeerd wachtwoord/gebruikersnaam
+						errorRegel = "Je hebt een verkeerde gebruikersnaam/wachtwoord ingevuld.";
+						return errorRegel;
 					}
 					
 					else if(statuscode > 0){
-						
 						//Er ging iets anders mis, maar er is wel een verbinding gemaakt met de server
 						errorRegel =  "Error " + statuscode + " er ging iets mis! Infoweb is niet gevonden.";
 						return errorRegel;
-						
 					}
 					
 					else {
-						
 						//Er was geen antwoord van de server
 						errorRegel = "Error 0 de server gaf geen antwoord en ligt hoogstwaarschijnlijk plat.";
 						return errorRegel;
-						
-					}
-					
+					}	
 				}
-				
-				else {
-
-					errorRegel = "Er ging iets fout, ik kon de beveiliging van infoweb niet omzeilen";
-					return errorRegel;
-					
-				}
-				
 			}
 			
+			if(broncode.indexOf("Geen rooster") >= 0){
+				int weekStart = broncode.indexOf("selected=\"selected\">");
+				int weekEind = broncode.indexOf("</", weekStart);
+				weeknummer = broncode.substring(weekStart + 20, weekEind);
+				
+				errorRegel = "Er staat geen rooster online";
+				return errorRegel;
+			}
+			
+			else if(broncode.indexOf("<h1>Mijn rooster</h1>") == -1){
+				errorRegel = "Het is me niet gelukt om in te loggen";
+				return errorRegel;
+			}
+			
+			else{
+				// Er staat een rooster op infoweb, haal het rooster uit de broncode en stuur deze terug voor analyse
+				int tabelPositie = broncode.indexOf("<table class=\"roosterdeel\"");
+				int tabelEinde = broncode.indexOf("<td id=\"linkerfooter\">");
+				tabelCode = broncode.substring(tabelPositie, tabelEinde);
+				
+				int gebruikersnaamPositie = broncode.indexOf("<h2>Het rooster voor ");
+				gebruikersnaam = broncode.substring(gebruikersnaamPositie + 21, broncode.indexOf("</h2>", gebruikersnaamPositie));
+				
+				int weekStart = broncode.indexOf("selected=\"selected\">");
+				int weekEind = broncode.indexOf("</", weekStart);
+				weeknummer = broncode.substring(weekStart + 20, weekEind);
+				
+				return tabelCode;
+			}
 		}
 		
-		//Als er iets misging dan willen we netjes aan de gebruiker laten weten wat er fout ging
+		//Er ging iets mis met de verbinding
 		
 		else if(statuscode == 404){
-			
 			// De pagina is niet gevonden
 			errorRegel = "404 Pagina niet gevonden, Infoweb kon niet gevonden.";			
 			return errorRegel;
-			
 		}
-		
+
+		else if(statuscode == 500){
+			//Verkeerde wachtwoord of gebruikersnaam
+			errorRegel = "Je hebt een verkeerde gebruikersnaam/wachtwoord ingevuld.";
+			return errorRegel;
+		}
+
 		else if(statuscode > 0){
-			
 			//Er ging iets anders mis, maar er is wel een verbinding gemaakt met de server
 			errorRegel =  "Error " + statuscode + " er ging iets mis! Infoweb is niet gevonden.";
 			return errorRegel;
-			
 		}
-		
+
 		else {
-			
 			//Er was geen antwoord van de server
 			errorRegel = "Error 0 de server gaf geen antwoord en ligt hoogstwaarschijnlijk plat.";
 			return errorRegel;
-		}
-		
+		}		
 	}
 
 }

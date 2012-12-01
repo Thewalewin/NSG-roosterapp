@@ -18,15 +18,17 @@ public final class R {
         public static final int ic_dag_selected=0x7f020004;
         public static final int ic_dag_unselected=0x7f020005;
         public static final int ic_launcher=0x7f020006;
-        public static final int icoon_agenda_tab=0x7f020007;
-        public static final int icoon_anderen_tab=0x7f020008;
-        public static final int icoon_rooster_tab=0x7f020009;
-        public static final int tabelcel=0x7f02000a;
-        public static final int tabelhoek_links_boven=0x7f02000b;
-        public static final int tabelhoek_links_onder=0x7f02000c;
-        public static final int tabelhoek_pwrooster_rechts_onder=0x7f02000d;
-        public static final int tabelhoek_rechts_boven=0x7f02000e;
-        public static final int tabelhoek_rechts_onder=0x7f02000f;
+        public static final int ic_menu_back=0x7f020007;
+        public static final int ic_menu_forward=0x7f020008;
+        public static final int icoon_agenda_tab=0x7f020009;
+        public static final int icoon_anderen_tab=0x7f02000a;
+        public static final int icoon_rooster_tab=0x7f02000b;
+        public static final int tabel_buitenkant=0x7f02000c;
+        public static final int tabelcel=0x7f02000d;
+        public static final int tabelhoek_links_boven=0x7f02000e;
+        public static final int tabelhoek_links_onder=0x7f02000f;
+        public static final int tabelhoek_rechts_boven=0x7f020010;
+        public static final int tabelhoek_rechts_onder=0x7f020011;
     }
     public static final class id {
         public static final int LinearLayout=0x7f060000;
@@ -38,11 +40,11 @@ public final class R {
         public static final int gebruikerVeld=0x7f060016;
         public static final int kopRij=0x7f06001a;
         public static final int leerlingKnop=0x7f060008;
-        public static final int leerlingnummerVeld=0x7f060021;
+        public static final int leerlingnummerVeld=0x7f060024;
         public static final int linearLayout1=0x7f060014;
         public static final int maandagKolom=0x7f06001c;
-        public static final int opslaanKnop=0x7f060023;
-        public static final int optiesMenuknop=0x7f060025;
+        public static final int opslaanKnop=0x7f060026;
+        public static final int optiesMenuknop=0x7f060027;
         public static final int radioGroup1=0x7f060006;
         public static final int roosterLayout=0x7f060015;
         public static final int roosterTabel=0x7f060019;
@@ -60,12 +62,15 @@ public final class R {
         public static final int textView8=0x7f060011;
         public static final int textView9=0x7f060012;
         public static final int updateKnop=0x7f060018;
-        public static final int updateMenuknop=0x7f060024;
+        public static final int updateMenuKnop=0x7f060028;
         public static final int updatetijdVeld=0x7f060017;
         public static final int uurKolom=0x7f06001b;
         public static final int vakSpinner=0x7f06000a;
+        public static final int volgendeweekKnop=0x7f060021;
+        public static final int vorigeweekKnop=0x7f060023;
         public static final int vrijdagKolom=0x7f060020;
-        public static final int wachtwoordVeld=0x7f060022;
+        public static final int wachtwoordVeld=0x7f060025;
+        public static final int weeknummerVeld=0x7f060022;
         public static final int woensdagKolom=0x7f06001e;
     }
     public static final class layout {
@@ -76,15 +81,30 @@ public final class R {
         public static final int voorkeur=0x7f030004;
     }
     public static final class menu {
-        public static final int menu=0x7f050000;
+        public static final int mainmenu=0x7f050000;
+        public static final int roostermenu=0x7f050001;
     }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int di=0x7f040003;
-        public static final int don=0x7f040005;
-        public static final int hello=0x7f040000;
-        public static final int ma=0x7f040002;
-        public static final int vr=0x7f040006;
-        public static final int wo=0x7f040004;
+        public static final int app_name=0x7f040000;
+        public static final int dinsdag=0x7f040002;
+        public static final int docent=0x7f04000a;
+        public static final int donderdag=0x7f040004;
+        public static final int eigenaar=0x7f040006;
+        public static final int favoriet=0x7f040009;
+        public static final int klas=0x7f04000c;
+        public static final int leerling=0x7f04000b;
+        public static final int leerlingnummer=0x7f04000f;
+        public static final int maandag=0x7f040001;
+        public static final int opslaan=0x7f040011;
+        public static final int update=0x7f040008;
+        public static final int updatetijd=0x7f040007;
+        public static final int volgendeweek=0x7f040014;
+        public static final int voorkeuren=0x7f04000e;
+        public static final int vorigeweek=0x7f040013;
+        public static final int vrijdag=0x7f040005;
+        public static final int wachtwoord=0x7f040010;
+        public static final int week=0x7f040012;
+        public static final int woensdag=0x7f040003;
+        public static final int zoeken=0x7f04000d;
     }
 }
