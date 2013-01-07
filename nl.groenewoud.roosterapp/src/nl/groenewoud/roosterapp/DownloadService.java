@@ -37,7 +37,8 @@ import android.content.Intent;
  */
 
 public class DownloadService extends IntentService {
-
+	
+	
 	public DownloadService() {
 		
 		super("DownloadService");
@@ -47,6 +48,7 @@ public class DownloadService extends IntentService {
 	/*
 	 * Variabelen die terug gestuurd worden naar de voorgrond om daar gebruikt te worden
 	 */
+	private GlobalVars gv;
 	
 	private String tabelCode;
 	private String errorRegel;
@@ -56,7 +58,7 @@ public class DownloadService extends IntentService {
 
 	private String user;
 	private String paswoord;
-	private boolean gewijzigd;
+
 	/*
 	 * Deze void wordt opgeroepen als de service gestart wordt. 
 	 * Dit gebeurt als de gebruiker het rooster wil updaten.
@@ -68,10 +70,10 @@ public class DownloadService extends IntentService {
 		 * Dit zijn de variabelen waarin de gegevens opgeslagen zijn die nodig zijn bij
 		 * het downloaden van het rooster. Zoals gebruikersnaam, wachtwoord, weeknummer etc. 
 		 */
+		gv = (GlobalVars) getApplicationContext();
 		
-		user = intent.getExtras().getString("user");
-		paswoord = intent.getExtras().getString("paswoord");
-		gewijzigd = intent.getExtras().getBoolean("gewijzigd");
+		user = gv.getLeerlingnummer();
+		paswoord = gv.getWachtwoord();
 		
 		/*
 		 *  Omdat de service hergebruikt wordt bij een rooster update moeten de variabelen geleegd worden
@@ -183,11 +185,12 @@ public class DownloadService extends IntentService {
 			//Als de download succesvol was dan willen we inloggen, de week veranderen, na gaan of er wel een rooster online staat of het rooster weergeven
 			broncode = EntityUtils.toString(response.getEntity());
 			
-			if(broncode.indexOf("<h1>Mijn rooster</h1>") == -1 || gewijzigd){
-				//We willen inloggen of de week veranderen
+			if(broncode.indexOf("<h1>Mijn rooster</h1>") == -1){
+				//We willen inloggen zoek dus naar de random code
 				int csrfPositie = broncode.indexOf("name=\"csrf\" value=\"");
 				
 				if(csrfPositie == -1){
+					//random code niet gevonden
 					errorRegel = "Ik kan de beveiliging van infoweb niet omzeilen.";
 					return errorRegel;
 				}
@@ -210,6 +213,7 @@ public class DownloadService extends IntentService {
 					statuscode = response.getStatusLine().getStatusCode();
 					
 					if(statuscode == 200){
+						// Downloaden gelukt laten we het antwoord in een variabele zetten voor verder gebruik
 						broncode = EntityUtils.toString(response.getEntity());
 					}
 					
@@ -239,7 +243,9 @@ public class DownloadService extends IntentService {
 				}
 			}
 			
+			// De site is gedownload maar er is geen rooster gevonden voor deze week
 			if(broncode.indexOf("Geen rooster") >= 0){
+				//Haal het weeknummer uit de broncode
 				int weekStart = broncode.indexOf("selected=\"selected\">");
 				int weekEind = broncode.indexOf("</", weekStart);
 				weeknummer = broncode.substring(weekStart + 20, weekEind);
@@ -248,6 +254,7 @@ public class DownloadService extends IntentService {
 				return errorRegel;
 			}
 			
+			//Het is niet gelukt in te loggen
 			else if(broncode.indexOf("<h1>Mijn rooster</h1>") == -1){
 				errorRegel = "Het is me niet gelukt om in te loggen";
 				return errorRegel;

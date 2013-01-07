@@ -37,6 +37,7 @@
 	        android:id="@+id/roosterTabel"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_marginRight="3dp"
 	        android:background="@drawable/tabel_buitenkant"
 	        android:collapseColumns="*"
 	        android:shrinkColumns="1,2,3,4,5"
@@ -51,15 +52,14 @@
 	                android:id="@+id/uurKolom"
 	                android:layout_width="15dp"
 	                android:layout_height="wrap_content"
+	                android:layout_marginBottom="-1dp"
 	                android:layout_marginLeft="-2dp"
-	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelhoek_links_boven" />
 
 	            <TextView
 	                android:id="@+id/maandagKolom"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelcel"
 	                android:gravity="center"
 	                android:text="@string/maandag" />
@@ -68,7 +68,6 @@
 	                android:id="@+id/dinsdagKolom"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelcel"
 	                android:gravity="center"
 	                android:text="@string/dinsdag" />
@@ -77,7 +76,6 @@
 	                android:id="@+id/woensdagKolom"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelcel"
 	                android:gravity="center"
 	                android:text="@string/woensdag" />
@@ -86,7 +84,6 @@
 	                android:id="@+id/donderdagKolom"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelcel"
 	                android:gravity="center"
 	                android:text="@string/donderdag" />
@@ -95,10 +92,11 @@
 	                android:id="@+id/vrijdagKolom"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
-	                android:layout_marginRight="-2.5dp"
+	                android:layout_marginRight="-2dp"
 	                android:background="@drawable/tabelhoek_rechts_boven"
 	                android:gravity="center"
 	                android:text="@string/vrijdag" />
+
 	        </TableRow>
 	    </TableLayout>
 
